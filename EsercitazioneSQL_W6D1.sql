@@ -1,0 +1,80 @@
+-- 1) CONNESSIONE AL DB
+USE AdventureWorksDW;
+
+-- 2) ESPLORA TABELLA
+SELECT *
+FROM dimproduct;
+
+-- 3) INTERROGAZIONE TAB CON ALIAS
+SELECT ProductKey AS ID_PRODOTTO
+, ProductAlternateKey AS CODICE_ALTERNATIVO
+, EnglishProductName AS NOME_PRODOTTO_INGLESE
+, Color AS COLORE
+, StandardCost AS COSTO_STANDARD
+, FinishedGoodsFlag AS PRODOTTO_FINITO
+FROM dimproduct;
+
+-- 4) ESPONI OUTPUT SOLO PER I PRODOTTI FINITI
+SELECT ProductKey AS ID_PRODOTTO
+, ProductAlternateKey AS CODICE_ALTERNATIVO
+, EnglishProductName AS NOME_PRODOTTO_INGLESE
+, Color AS COLORE
+, StandardCost AS COSTO_STANDARD
+, FinishedGoodsFlag AS PRODOTTO_FINITO
+FROM dimproduct
+WHERE FinishedGoodsFlag = 1;
+
+-- 5) NUOVA QUERY CON CARATTERISTICHE DEL PUNTO 5
+
+SELECT ProductKey AS ID_PRODOTTO
+, ProductAlternateKey AS CODICE_MODELLO
+, EnglishProductName AS NOME_PRODOTTO
+, StandardCost AS COSTO_STANDARD
+, ListPrice AS PREZZO_DI_LISTINO
+FROM dimproduct
+WHERE ProductAlternateKey LIKE 'FR%'
+OR ProductAlternateKey LIKE 'BK%';
+
+-- 1) PAG3 AGGIUNGI MARKUP
+
+SELECT ProductKey AS ID_PRODOTTO
+, ProductAlternateKey AS CODICE_MODELLO
+, EnglishProductName AS NOME_PRODOTTO
+, StandardCost AS COSTO_STANDARD
+, ListPrice AS PREZZO_DI_LISTINO
+, ListPrice-StandardCost AS MARKUP
+FROM dimproduct
+WHERE ProductAlternateKey LIKE 'FR%'
+OR ProductAlternateKey LIKE 'BK%';
+
+-- 2) PAG3 NUOVA QUERY ELENCO PRODOTTI FINITI SE IL PREZZO è COMPRESO TRA 1000 E 2000
+
+SELECT ProductKey AS ID_PRODOTTO
+, ProductAlternateKey AS CODICE_ALTERNATIVO
+, EnglishProductName AS NOME_PRODOTTO_INGLESE
+, ListPrice AS PREZZO_LISTINO
+, FinishedGoodsFlag AS PRODOTTO_FINITO
+FROM dimproduct
+WHERE FinishedGoodsFlag = 1
+AND ListPrice BETWEEN 1000 AND 2000; 
+
+-- 3) PAG3 ESPLORA TABELLA IMPIEGATI AZIENDALI
+SELECT *
+FROM dimemployee;
+
+-- 4) PAG3 ESPONI SOLO AGENTI
+SELECT *
+FROM dimemployee
+WHERE SalespersonFlag = 1;
+
+/* 5) PAG 3 INTERROGA TAB VENDITE, 
+ESPONI IN OUTPUT SOLO TRANSAZIONI DAL 1/1/2020 SOLO DEI COD RICHIESTI
+E CALCOLA IL PROFITTO
+*/
+
+SELECT *
+, SalesAmount-TotalProductCost AS Profitto
+FROM factresellersales
+WHERE ProductKey IN (597, 598, 477, 214)
+AND OrderDate >= '2020-01-01';
+
